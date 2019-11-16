@@ -8,7 +8,7 @@ export class Home extends Component<HomeProps> {
 
   turn = (cell: number, number: number) => {
     if (this.props.connection != null) {
-      this.props.connection.send("turn", "user1", cell, number);
+      this.props.connection.send("turn", { id:"f3488a67-9418-4cb1-84b6-04dd873cffaa", name: "user1" }, cell, number);
     }
   }
 
@@ -18,11 +18,12 @@ export class Home extends Component<HomeProps> {
       <Table bordered>
         <tbody>
           {
-            [0, 3, 6].map(row => (
+            range(9).map(row => (
               <tr key={row}>
-                {[0, 1, 2].map(col => (
-                  <td key={col} onClick={() => this.turn(row + col, row + col)}>{this.props.arena.cells[row + col]}</td>
-                 ))
+                {range(9).map(col => {
+                  const cell = 9 * row + col;
+                  return <td key={col}>{this.props.arena.cells[cell] == null ? this.numberSelector(cell) : this.props.arena.cells[cell]}</td>
+                })
                 }
               </tr>
             ))
@@ -32,7 +33,32 @@ export class Home extends Component<HomeProps> {
       </Table>
     );
   }
+  numberSelector(cell: number) {
+    return (
+      <Table borderless size="sm">
+        <tbody>
+          {
+            range(3).map(row => (
+              <tr key={row}>
+                {range(3).map(col => (
+                  <td key={col} onClick={() => this.turn(cell, 3 * row + col)}>{3 *row + col}</td>
+                ))
+                }
+              </tr>
+            ))
+          }
+
+        </tbody>
+      </Table>
+   );
+  }
 }
+
+function range(n: number)
+{
+  return Array.from(Array(n).keys());
+}
+
 
 interface HomeProps {
   connection?: signalR.HubConnection;

@@ -5,7 +5,7 @@ import { Home } from './components/Home';
 import { FetchData } from './components/FetchData';
 import { Counter } from './components/Counter';
 import * as signalR from "@aspnet/signalr";
-import { Arena } from './models/arena';
+import { Arena, Turn, Game } from './models/arena';
 
 import './custom.css'
 
@@ -13,10 +13,15 @@ function connectToSignalR(applyArena:(f:(arena:Arena)=>Arena)=>void) {
 
   const connection = new signalR.HubConnectionBuilder()
     .withUrl("/hub")
+    .configureLogging(signalR.LogLevel.Debug)
     .build();
 
-  connection.on("turned", (username: string, cell: number, number: number) => {
-    applyArena((arena:Arena) => arena.turned(cell, number));
+
+  connection.on("turned", (turn: Turn) => {
+    applyArena((arena:Arena) => arena.turned(turn));
+  });
+  connection.on("game", (game: Game) => {
+    applyArena((arena: Arena) => arena.gamed(game));
   });
 
   return connection;

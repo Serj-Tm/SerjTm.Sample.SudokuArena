@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SerjTm.Sample.SudokuArena.Hubs;
+using SerjTm.Sample.SudokuArena.Storages;
 
 namespace SerjTm.Sample.SudokuArena
 {
@@ -22,7 +23,8 @@ namespace SerjTm.Sample.SudokuArena
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews()
+                .AddNewtonsoftJson();
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -30,7 +32,11 @@ namespace SerjTm.Sample.SudokuArena
                 configuration.RootPath = "ClientApp/build";
             });
 
-            services.AddSignalR();
+            services.AddSignalR()
+                .AddNewtonsoftJsonProtocol();
+
+            services.AddSingleton<WorldStorage>();
+            services.AddSingleton<ArenaEngine>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
