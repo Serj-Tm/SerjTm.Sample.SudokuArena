@@ -21,7 +21,7 @@ namespace SerjTm.Sample.SudokuArena.Hubs
 
             await Clients.All.Turned(result.Turn);
 
-            if (result.IsFinished)
+            if (result.IsWin || result.IsFail)
             {
                 await Clients.All.Game(world.Game);
             }

@@ -29,7 +29,7 @@ namespace SerjTm.Sample.SudokuArena.Domains
             if (turn.IsSkipped)
                 return (world.With(game: game), new TurnResult(turn));
 
-            return (world.With(game: game.IsFinished ? new Game() : game), new TurnResult(turn, isFinished: game.IsFinished));
+            return (world.With(game: game.IsWin ? new Game() : game), new TurnResult(turn, isWin: game.IsWin, isFail: game.IsFail));
         }
         static ImmutableDictionary<Guid, User> Win(ImmutableDictionary<Guid, User> users, User user)
         {
@@ -41,7 +41,8 @@ namespace SerjTm.Sample.SudokuArena.Domains
     public partial class TurnResult
     {
         public readonly Turn Turn;
-        public readonly bool IsFinished = false;
+        public readonly bool IsWin = false;
+        public readonly bool IsFail = false;
     }
 
     public partial class Game
@@ -63,7 +64,9 @@ namespace SerjTm.Sample.SudokuArena.Domains
             return (isSkipped ? game : game.With(field:field), turn);
         }
         const int CellCount = 9 * 9;
-        public bool IsFinished => Turns.Count(turn => !turn.IsSkipped) == CellCount;
+        public bool IsWin => Turns.Count(turn => !turn.IsSkipped) == CellCount;
+        public bool IsFail => Enumerable.Range(0, CellCount)
+            .Any(cell => Field[cell] == null && CellLines(cell).Select(line => Numbers(this.Field, line)).Distinct().Count() == 9);
 
         static bool Check(ImmutableArray<int?> field)
         {
@@ -71,12 +74,16 @@ namespace SerjTm.Sample.SudokuArena.Domains
         }
         static bool Check(ImmutableArray<int?> field, IEnumerable<int> line)
         {
-            return line.Select(i => field[i]).Where(n => n != null).GroupBy(n => n).All(group => group.Count() == 1);
+            return Numbers(field, line).GroupBy(n => n).All(group => group.Count() == 1);
         }
 
-        static readonly IEnumerable<IEnumerable<int>> Rows = Enumerable.Range(0, 9).Select(row => Enumerable.Range(0, 9).Select(col => 9 * row + col).ToArray()).ToArray();
-        static readonly IEnumerable<IEnumerable<int>> Columns = Enumerable.Range(0, 9).Select(col => Enumerable.Range(0, 9).Select(row => 9 * row + col).ToArray()).ToArray();
-        static readonly IEnumerable<IEnumerable<int>> Squares = Enumerable.Range(0, 9).Select(square =>
+        //static IEnumerable<int> UsedNumbers(int cell)=>CellLines(cell).Select(line => )
+        static IEnumerable<int> Numbers(ImmutableArray<int?> field, IEnumerable<int> line) 
+            => line.Select(cell => field[cell]).Where(n => n != null).Select(n => (int)n);
+
+        static IEnumerable<int> Row(int row) => Enumerable.Range(0, 9).Select(col => 9 * row + col).ToArray();
+        static IEnumerable<int> Column(int col) => Enumerable.Range(0, 9).Select(row => 9 * row + col).ToArray();
+        static IEnumerable<int> Square(int square)
         {
             var squareRow = square / 3;
             var squareCol = square % 3;
@@ -87,7 +94,21 @@ namespace SerjTm.Sample.SudokuArena.Domains
                 var col = i % 3;
                 return 9 * (3 * squareRow + row) + (3 * squareCol + col);
             }).ToArray();
-        }).ToArray();
+        }
+
+        static IEnumerable<IEnumerable<int>> CellLines(int cell)
+        {
+            var row = cell / 9;
+            var col = cell % 9;
+
+            yield return Row(row);
+            yield return Column(col);
+            yield return Square(3 * (row / 3) + col / 3);
+        }
+
+        static readonly IEnumerable<IEnumerable<int>> Rows = Enumerable.Range(0, 9).Select(row => Row(row)).ToArray();
+        static readonly IEnumerable<IEnumerable<int>> Columns = Enumerable.Range(0, 9).Select(col => Column(col)).ToArray();
+        static readonly IEnumerable<IEnumerable<int>> Squares = Enumerable.Range(0, 9).Select(square => Square(square)).ToArray();
 
         static readonly IEnumerable<IEnumerable<int>> Lines = Rows.Concat(Columns).Concat(Squares).ToArray();
 
