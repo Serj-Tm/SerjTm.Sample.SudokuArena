@@ -29,7 +29,7 @@ namespace SerjTm.Sample.SudokuArena.Domains
             if (turn.IsSkipped)
                 return (world.With(game: game), new TurnResult(turn));
 
-            return (world.With(game: game.IsWin ? new Game() : game), new TurnResult(turn, isWin: game.IsWin, isFail: game.IsFail));
+            return (world.With(game: game.IsWin || game.IsFail ? new Game() : game), new TurnResult(turn, isWin: game.IsWin, isFail: game.IsFail));
         }
         static ImmutableDictionary<Guid, User> Win(ImmutableDictionary<Guid, User> users, User user)
         {
@@ -66,7 +66,7 @@ namespace SerjTm.Sample.SudokuArena.Domains
         const int CellCount = 9 * 9;
         public bool IsWin => Turns.Count(turn => !turn.IsSkipped) == CellCount;
         public bool IsFail => Enumerable.Range(0, CellCount)
-            .Any(cell => Field[cell] == null && CellLines(cell).Select(line => Numbers(this.Field, line)).Distinct().Count() == 9);
+            .Any(cell => Field[cell] == null && CellLines(cell).SelectMany(line => Numbers(this.Field, line)).Distinct().Count() == 9);
 
         static bool Check(ImmutableArray<int?> field)
         {
@@ -77,7 +77,6 @@ namespace SerjTm.Sample.SudokuArena.Domains
             return Numbers(field, line).GroupBy(n => n).All(group => group.Count() == 1);
         }
 
-        //static IEnumerable<int> UsedNumbers(int cell)=>CellLines(cell).Select(line => )
         static IEnumerable<int> Numbers(ImmutableArray<int?> field, IEnumerable<int> line) 
             => line.Select(cell => field[cell]).Where(n => n != null).Select(n => (int)n);
 
@@ -112,7 +111,7 @@ namespace SerjTm.Sample.SudokuArena.Domains
 
         static readonly IEnumerable<IEnumerable<int>> Lines = Rows.Concat(Columns).Concat(Squares).ToArray();
 
-        static readonly ImmutableArray<int?> EmptyField = Enumerable.Range(0, CellCount).Select(_ => (int?)null).ToImmutableArray();
+        public static readonly ImmutableArray<int?> EmptyField = Enumerable.Range(0, CellCount).Select(_ => (int?)null).ToImmutableArray();
     }
     public partial class Turn
     {
