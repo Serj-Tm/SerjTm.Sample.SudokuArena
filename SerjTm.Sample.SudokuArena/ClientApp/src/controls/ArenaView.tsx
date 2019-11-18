@@ -11,7 +11,7 @@ export class ArenaView extends Component<ArenaViewProps> {
 
   turn = (cell: number, number: number) => {
     if (this.props.connection != null) {
-      this.props.connection.send("turn", { id: "f3488a67-9418-4cb1-84b6-04dd873cffaa", name: "user1" }, cell, number);
+      this.props.connection.send("turn", this.props.arena.user, cell, number);
     }
   }
 

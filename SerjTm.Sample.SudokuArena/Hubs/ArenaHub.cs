@@ -15,7 +15,7 @@ namespace SerjTm.Sample.SudokuArena.Hubs
             this.ArenaEngine = engine;
         }
         private ArenaEngine ArenaEngine;
-        public async Task Turn(User_Id_Name user, int cell, int number)
+        public async Task Turn(User_Name user, int cell, int number)
         {
             var (world, result) = ArenaEngine.Turn(user, cell, number);
 

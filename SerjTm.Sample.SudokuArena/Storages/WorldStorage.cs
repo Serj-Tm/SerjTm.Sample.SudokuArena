@@ -40,7 +40,7 @@ namespace SerjTm.Sample.SudokuArena.Storages
         }
         private readonly WorldStorage WorldStorage;
 
-        public (World world, TurnResult result) Turn(IUser_Id_Name user, int cell, int number)
+        public (World world, TurnResult result) Turn(IUser_Name user, int cell, int number)
         {
             return WorldStorage.UpdateWorld(world => world.Turn(user, cell, number));
         }

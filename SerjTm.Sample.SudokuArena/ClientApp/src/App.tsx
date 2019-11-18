@@ -56,7 +56,7 @@ export default class App extends Component<{}, AppState> {
   render () {
     return (
       <Layout>
-        <Route exact path='/' render={(props) => <Home connection={this.state.connection} arena={this.state.arena} setUser={user => this.applyArena(arena => arena.withUser(user))} />} />
+        <Route exact path='/' render={(props) => <Home connection={this.state.connection} arena={this.state.arena} setUser={user => this.applyArena(arena => arena.with({ user: user }))} />} />
         <Route path='/counter' component={Counter} />
         <Route path='/fetch-data' component={FetchData} />
       </Layout>

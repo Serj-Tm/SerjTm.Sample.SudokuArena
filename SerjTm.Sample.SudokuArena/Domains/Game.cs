@@ -10,17 +10,17 @@ namespace SerjTm.Sample.SudokuArena.Domains
     public partial class World
     {
         public readonly Game Game = new Game();
-        public readonly ImmutableDictionary<Guid, User> Users = ImmutableDictionary<Guid, User>.Empty;
+        public readonly ImmutableDictionary<string, User> Users = ImmutableDictionary<string, User>.Empty;
 
 
-        public (World world, TurnResult result) Turn(IUser_Id_Name user, int cell, int number)
+        public (World world, TurnResult result) Turn(IUser_Name user, int cell, int number)
         {
             var users = this.Users;
-            var currentUser = users.Find(user.Id);
+            var currentUser = users.Find(user.Name);
             if (currentUser != null)
             {
-                currentUser = new User(user.Id, user.Name);
-                users = users.Add(currentUser.Id, currentUser);
+                currentUser = new User(user.Name);
+                users = users.Add(currentUser.Name, currentUser);
             }
 
             var world = this.With(users: users);
@@ -31,9 +31,9 @@ namespace SerjTm.Sample.SudokuArena.Domains
 
             return (world.With(game: game.IsWin || game.IsFail ? new Game() : game), new TurnResult(turn, isWin: game.IsWin, isFail: game.IsFail));
         }
-        static ImmutableDictionary<Guid, User> Win(ImmutableDictionary<Guid, User> users, User user)
+        static ImmutableDictionary<string, User> Win(ImmutableDictionary<string, User> users, User user)
         {
-            return users.SetItem(user.Id, user.With(winRate:user.WinRate + 1));
+            return users.SetItem(user.Name, user.With(winRate:user.WinRate + 1));
         }
 
     }
@@ -128,32 +128,26 @@ namespace SerjTm.Sample.SudokuArena.Domains
         public readonly User User;
         public readonly DateTime Time;
     }
-    public partial class User: IUser_Id_Name
+    public partial class User: IUser_Name
     {
-        public readonly Guid Id = Guid.NewGuid();
         public readonly string Name;
         public readonly int WinRate = 0;
 
-        Guid IUser_Id_Name.Id => Id;
-
-        string IUser_Id_Name.Name => Name;
+        string IUser_Name.Name => Name;
     }
 
 #pragma warning disable CA1707 // Identifiers should not contain underscores
-    public interface IUser_Id_Name
+    public interface IUser_Name
     {
-        Guid Id { get; }
         string Name { get; }
     }
 
-    public partial class User_Id_Name: IUser_Id_Name
+    public partial class User_Name: IUser_Name
     {
-        public readonly Guid Id = Guid.NewGuid();
         public readonly string Name;
 
-        Guid IUser_Id_Name.Id => Id;
 
-        string IUser_Id_Name.Name => Name;
+        string IUser_Name.Name => Name;
     }
 #pragma warning restore CA1707 // Identifiers should not contain underscores
 

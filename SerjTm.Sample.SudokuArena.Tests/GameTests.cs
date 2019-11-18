@@ -31,7 +31,7 @@ namespace SerjTm.Sample.SudokuArena.Tests
 
             var game = new Game(field:field);
 
-            Assert.True(game.Turn(new User(null, "user1"), 15, number).turn.IsSkipped);
+            Assert.True(game.Turn(new User("user1"), 15, number).turn.IsSkipped);
 
         }
         [Fact]

@@ -1,20 +1,22 @@
 export class Arena {
-  constructor(cells?: number[], user?: User_Name) {
+  constructor(cells?: number[], user?: User_Name, turns?:Turn[]) {
     this.cells = cells || [];
     this.user = user;
+    this.turns = turns || [];
   }
-  user?: User_Name = undefined;
   cells: number[];
+  user?: User_Name = undefined;
+  turns: Turn[] = [];
   
 
   turned(turn: Turn) {
-    if (turn.isSkipped)
-      return this;
+    let cells = this.cells;
+    if (!turn.isSkipped) {
+      cells = { ...this.cells }
+      cells[turn.cell] = turn.number;
+    }
 
-    const cells = { ...this.cells };
-    cells[turn.cell] = turn.number;
-
-    return new Arena(cells, this.user);
+    return this.with({ cells: cells, turns: [turn].concat(this.turns).slice(0, 20) });
   }
   gamed(game: Game) {
     const cells = [];
@@ -24,10 +26,10 @@ export class Arena {
         continue;
       cells[turn.cell] = turn.number;
     }
-    return new Arena(cells, this.user);
+    return this.with({ cells: cells });
   }
-  withUser(user: User_Name) {
-    return new Arena(this.cells, user);
+  with(props: { cells?: number[], user?: User_Name, turns?: Turn[] }) {
+    return new Arena(props.cells || this.cells, props.user || this.user, props.turns || this.turns);
   }
 }
 

@@ -15,13 +15,13 @@ namespace SerjTm.Sample.SudokuArena.Domains
 {
     partial class World
     {
-        public World(Game game = null, ImmutableDictionary<Guid, User> users = null)
+        public World(Game game = null, ImmutableDictionary<string, User> users = null)
         {
             Game = game ?? Game;
             Users = users ?? Users;
         }
 
-        public World With(Game game = null, ImmutableDictionary<Guid, User> users = null)
+        public World With(Game game = null, ImmutableDictionary<string, User> users = null)
         {
             return new World(game ?? Game, users ?? Users);
         }
@@ -29,7 +29,7 @@ namespace SerjTm.Sample.SudokuArena.Domains
 
     public static partial class WorldHelper
     {
-        public static World By(this IEnumerable<World> items, Game game = null, ImmutableDictionary<Guid, User> users = null)
+        public static World By(this IEnumerable<World> items, Game game = null, ImmutableDictionary<string, User> users = null)
         {
             if (game != null)
                 return items.FirstOrDefault(_item => _item.Game == game);
@@ -164,25 +164,22 @@ namespace SerjTm.Sample.SudokuArena.Domains
 
     partial class User
     {
-        public User(Guid? id, string name, int ? winRate = null)
+        public User(string name, int ? winRate = null)
         {
-            Id = id ?? Id;
             Name = name;
             WinRate = winRate ?? WinRate;
         }
 
-        public User With(Guid? id = null, string name = null, int ? winRate = null)
+        public User With(string name = null, int ? winRate = null)
         {
-            return new User(id ?? Id, name ?? Name, winRate ?? WinRate);
+            return new User(name ?? Name, winRate ?? WinRate);
         }
     }
 
     public static partial class UserHelper
     {
-        public static User By(this IEnumerable<User> items, Guid? id = null, string name = null, int ? winRate = null)
+        public static User By(this IEnumerable<User> items, string name = null, int ? winRate = null)
         {
-            if (id != null)
-                return items.FirstOrDefault(_item => _item.Id == id);
             if (name != null)
                 return items.FirstOrDefault(_item => _item.Name == name);
             if (winRate != null)
@@ -191,26 +188,23 @@ namespace SerjTm.Sample.SudokuArena.Domains
         }
     }
 
-    partial class User_Id_Name
+    partial class User_Name
     {
-        public User_Id_Name(Guid? id, string name)
+        public User_Name(string name)
         {
-            Id = id ?? Id;
             Name = name;
         }
 
-        public User_Id_Name With(Guid? id = null, string name = null)
+        public User_Name With(string name = null)
         {
-            return new User_Id_Name(id ?? Id, name ?? Name);
+            return new User_Name(name ?? Name);
         }
     }
 
-    public static partial class User_Id_NameHelper
+    public static partial class User_NameHelper
     {
-        public static User_Id_Name By(this IEnumerable<User_Id_Name> items, Guid? id = null, string name = null)
+        public static User_Name By(this IEnumerable<User_Name> items, string name = null)
         {
-            if (id != null)
-                return items.FirstOrDefault(_item => _item.Id == id);
             if (name != null)
                 return items.FirstOrDefault(_item => _item.Name == name);
             return null;
