@@ -1,3 +1,13 @@
 ﻿.skipped{
     text-decoration:line-through;
 }
+.win{
+    font-size: 200%;
+    color: red;
+    font-weight:bolder;
+    text-align:center;
+}
+.fail {
+    font-size: 200%;
+    text-align: center;
+}

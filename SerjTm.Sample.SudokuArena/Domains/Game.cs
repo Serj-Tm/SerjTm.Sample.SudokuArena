@@ -12,12 +12,13 @@ namespace SerjTm.Sample.SudokuArena.Domains
         public readonly Game Game = new Game();
         public readonly ImmutableDictionary<string, User> Users = ImmutableDictionary<string, User>.Empty;
 
+        public IEnumerable<User> Top => Users.Values.OrderByDescending(user => user.WinRate).Take(30).ToArray();
 
         public (World world, TurnResult result) Turn(IUser_Name user, int cell, int number)
         {
             var users = this.Users;
             var currentUser = users.Find(user.Name);
-            if (currentUser != null)
+            if (currentUser == null)
             {
                 currentUser = new User(user.Name);
                 users = users.Add(currentUser.Name, currentUser);
@@ -29,11 +30,11 @@ namespace SerjTm.Sample.SudokuArena.Domains
             if (turn.IsSkipped)
                 return (world.With(game: game), new TurnResult(turn));
 
-            return (world.With(game: game.IsWin || game.IsFail ? new Game() : game), new TurnResult(turn, isWin: game.IsWin, isFail: game.IsFail));
+            return (world.With(game: game.IsWin || game.IsFail ? new Game() : game, game.IsWin ? Win(world.Users, turn.User) : world.Users), new TurnResult(turn, isWin: game.IsWin, isFail: game.IsFail));
         }
         static ImmutableDictionary<string, User> Win(ImmutableDictionary<string, User> users, User user)
         {
-            return users.SetItem(user.Name, user.With(winRate:user.WinRate + 1));
+            return users.SetItem(user.Name, (users.Find(user.Name) ?? user).With(winRate:user.WinRate + 1));
         }
 
     }
@@ -121,12 +122,6 @@ namespace SerjTm.Sample.SudokuArena.Domains
         public readonly int Number;
         public readonly DateTime Time;
         public readonly bool IsSkipped = false;
-    }
-    public partial class Win
-    {
-        public readonly Guid Id = Guid.NewGuid();
-        public readonly User User;
-        public readonly DateTime Time;
     }
     public partial class User: IUser_Name
     {

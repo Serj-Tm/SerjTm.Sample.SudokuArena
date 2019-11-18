@@ -1,6 +1,10 @@
 ﻿.field td{
     padding:2px;
 }
+.field > tbody > tr {
+    height:68px;
+}
+
 .field .sq-r0{
     border-top-color:black;
 }
@@ -16,7 +20,7 @@
 }
 
 .number{
-    font-size:300%;
+    font-size:250%;
     text-align: center;
 }
 .number-selector{

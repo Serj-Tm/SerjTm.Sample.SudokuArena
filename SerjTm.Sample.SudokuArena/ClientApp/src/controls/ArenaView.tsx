@@ -29,7 +29,7 @@ export class ArenaView extends Component<ArenaViewProps> {
                   const square_row = row - 3 * Math.floor(row / 3);
                   const square_col = col - 3 * Math.floor(col / 3);
                   return (
-                    <td key={col} className={`sq-r${square_row} sq-c${square_col}`}>
+                    <td key={col} className={`cell sq-r${square_row} sq-c${square_col}`}>
                       {
                         this.props.arena.cells[cell] == null
                           ? this.numberSelector(cell)

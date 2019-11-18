@@ -8,9 +8,10 @@ namespace SerjTm.Sample.SudokuArena.Hubs
 {
     public interface IArenaClient
     {
-        Task Turned(Turn turn);
+        Task Turned(Turn turn, bool isWin, bool isFail);
         Task Game(Game game);
         Task Win(User user);
-        //Task Arena(int[] cells);
+
+        Task Top(IEnumerable<User> users);
     }
 }

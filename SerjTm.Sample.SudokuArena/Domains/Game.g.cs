@@ -133,35 +133,6 @@ namespace SerjTm.Sample.SudokuArena.Domains
         }
     }
 
-    partial class Win
-    {
-        public Win(Guid? id, User user, DateTime time)
-        {
-            Id = id ?? Id;
-            User = user;
-            Time = time;
-        }
-
-        public Win With(Guid? id = null, User user = null, DateTime? time = null)
-        {
-            return new Win(id ?? Id, user ?? User, time ?? Time);
-        }
-    }
-
-    public static partial class WinHelper
-    {
-        public static Win By(this IEnumerable<Win> items, Guid? id = null, User user = null, DateTime? time = null)
-        {
-            if (id != null)
-                return items.FirstOrDefault(_item => _item.Id == id);
-            if (user != null)
-                return items.FirstOrDefault(_item => _item.User == user);
-            if (time != null)
-                return items.FirstOrDefault(_item => _item.Time == time);
-            return null;
-        }
-    }
-
     partial class User
     {
         public User(string name, int ? winRate = null)

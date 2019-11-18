@@ -18,7 +18,14 @@ export class Home extends Component<HomeProps> {
           {
             this.props.arena.user == null
               ? <SignUp setUser={this.props.setUser} />
-              : <ArenaView connection={this.props.connection} arena={this.props.arena} />
+              : (
+                <div>
+                  <h3>{this.props.arena.user.name}</h3>
+                  <ArenaView connection={this.props.connection} arena={this.props.arena} />
+                  <Button disabled={this.props.arena.cells.length != 0} onClick={this.sendWin}>Auto win</Button>{' '}
+                  <Button disabled={this.props.arena.cells.length != 0} onClick={this.sendFail}>Auto fail</Button>{' '}
+                </div>
+                )
           }
         </Col>
         <Col sm='2'>
@@ -26,6 +33,43 @@ export class Home extends Component<HomeProps> {
         </Col>
       </Row>
     );
+  }
+
+  sendField = async (field: number[]) => {
+    if (this.props.connection == null)
+      return;
+
+    for (var cell in field) {
+      await this.props.connection.send("turn", this.props.arena.user, cell, field[cell] - 1);
+    }
+
+  }
+  sendWin = async () => {
+
+    const field = [
+      5, 3, 4, 6, 7, 8, 9, 1, 2,
+      6, 7, 2, 1, 9, 5, 3, 4, 8,
+      1, 9, 8, 3, 4, 2, 5, 6, 7,
+      8, 5, 9, 7, 6, 1, 4, 2, 3,
+      4, 2, 6, 8, 5, 3, 7, 9, 1,
+      7, 1, 3, 9, 2, 4, 8, 5, 6,
+      9, 6, 1, 5, 3, 7, 2, 8, 4,
+      2, 8, 7, 4, 1, 9, 6, 3, 5,
+      3, 4, 5, 2, 8, 6, 1, 7, 9
+    ];
+
+    this.sendField(field);
+
+  }
+  sendFail = async () => {
+
+    const field = [
+      1, 2, 3, 4, 5, 6, 7, 8, 9,
+      4, 5, 6, 1, 2, 3,
+    ];
+
+    this.sendField(field);
+
   }
 }
 
