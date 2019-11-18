@@ -62,7 +62,7 @@ function range(n: number) {
 }
 
 
-interface ArenaViewProps {
+export interface ArenaViewProps {
   connection?: signalR.HubConnection;
   arena: Arena;
 }

@@ -1,8 +1,11 @@
 export class Arena {
-  constructor(cells?: number[]) {
+  constructor(cells?: number[], user?: User_Name) {
     this.cells = cells || [];
+    this.user = user;
   }
+  user?: User_Name = undefined;
   cells: number[];
+  
 
   turned(turn: Turn) {
     if (turn.isSkipped)
@@ -11,7 +14,7 @@ export class Arena {
     const cells = { ...this.cells };
     cells[turn.cell] = turn.number;
 
-    return new Arena(cells);
+    return new Arena(cells, this.user);
   }
   gamed(game: Game) {
     const cells = [];
@@ -21,7 +24,10 @@ export class Arena {
         continue;
       cells[turn.cell] = turn.number;
     }
-    return new Arena(cells);
+    return new Arena(cells, this.user);
+  }
+  withUser(user: User_Name) {
+    return new Arena(this.cells, user);
   }
 }
 
@@ -33,4 +39,8 @@ export interface Turn {
 
 export interface Game {
   turns: Turn[];
+}
+
+export interface User_Name{
+  name: string;
 }
