@@ -1,0 +1,14 @@
+﻿.field td{
+    padding:2px;
+}
+.number{
+    font-size:300%;
+}
+.number-selector{
+    margin:0px;
+}
+.number-selector td {
+    font-size: 70%;
+    padding: 2px;
+    text-align: center;
+}

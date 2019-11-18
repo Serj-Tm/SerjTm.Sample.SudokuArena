@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import * as signalR from "@aspnet/signalr";
 import { Table } from 'reactstrap';
 import { Arena } from '../models/arena';
+import './ArenaView.css';
 
 
 const displayNumber = (i: number) => i + 1;
@@ -18,14 +19,26 @@ export class ArenaView extends Component<ArenaViewProps> {
 
   render() {
     return (
-      <Table bordered>
+      <Table bordered className='field'>
         <tbody>
           {
             range(9).map(row => (
               <tr key={row}>
                 {range(9).map(col => {
                   const cell = 9 * row + col;
-                  return <td key={col}>{this.props.arena.cells[cell] == null ? this.numberSelector(cell) : displayNumber(this.props.arena.cells[cell])}</td>
+                  return (
+                    <td key={col}>
+                      {
+                        this.props.arena.cells[cell] == null
+                          ? this.numberSelector(cell)
+                          : (
+                            <div className='number'>
+                              {displayNumber(this.props.arena.cells[cell])}
+                            </div>
+                            )
+                      }
+                    </td>
+                  );
                 })
                 }
               </tr>
@@ -38,7 +51,7 @@ export class ArenaView extends Component<ArenaViewProps> {
   }
   numberSelector(cell: number) {
     return (
-      <Table borderless size="sm">
+      <Table borderless size="sm" className='number-selector'>
         <tbody>
           {
             range(3).map(row => (

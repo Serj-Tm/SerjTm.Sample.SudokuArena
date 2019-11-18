@@ -1,8 +1,9 @@
 ﻿import React, { Component, useState } from 'react';
+import { Input, Button, Row, Col } from 'reactstrap';
+import { oc } from 'ts-optchain';
 import { User_Name, Arena } from '../models/arena';
 import { ArenaView, ArenaViewProps } from '../controls/ArenaView';
-import { Input, Button } from 'reactstrap';
-import { oc } from 'ts-optchain';
+import { TurnsView } from '../controls/TurnsView';
 
 
 export class Home extends Component<HomeProps> {
@@ -12,12 +13,18 @@ export class Home extends Component<HomeProps> {
 
   render () {
     return (
-      [
-        this.props.arena.user == null
-          ? <SignUp setUser={this.props.setUser}/>
-          : <ArenaView connection={this.props.connection} arena={this.props.arena} />,
-        <TurnsView arena={this.props.arena}/>
-      ]
+      <Row>
+        <Col sm='10'>
+          {
+            this.props.arena.user == null
+              ? <SignUp setUser={this.props.setUser} />
+              : <ArenaView connection={this.props.connection} arena={this.props.arena} />
+          }
+        </Col>
+        <Col sm='2'>
+          <TurnsView arena={this.props.arena} />
+        </Col>
+      </Row>
     );
   }
 }
@@ -35,18 +42,7 @@ function SignUp(props: { setUser: (user: User_Name) => void}) {
     );
 }
 
-function TurnsView(props: { arena: Arena }) {
-  console.log(props.arena.turns);
-  return (
-    <div>
-      {
-        props.arena.turns.map((turn, k) =>
-          <div key={k}>{turn.cell}{' '}{turn.number + 1}</div>
-        )
-      }
-    </div>
-    );
-}
+
 
 interface SignUpProps {
   setUser: (user: User_Name) => void;
