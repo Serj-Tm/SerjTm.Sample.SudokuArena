@@ -1,8 +1,23 @@
 ﻿.field td{
     padding:2px;
 }
+.field .sq-r0{
+    border-top-color:black;
+}
+.field .sq-r2 {
+    border-bottom-color: black;
+}
+.field .sq-c0 {
+    border-left-color: black;
+}
+
+.field .sq-c2 {
+    border-right-color: black;
+}
+
 .number{
     font-size:300%;
+    text-align: center;
 }
 .number-selector{
     margin:0px;
