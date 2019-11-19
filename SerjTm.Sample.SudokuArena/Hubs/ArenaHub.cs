@@ -46,7 +46,7 @@ namespace SerjTm.Sample.SudokuArena.Hubs
             await Clients.Caller.Game(this.ArenaEngine.World.Game);
             await Clients.Caller.Top(this.ArenaEngine.World.Top);
 
-            base.OnConnectedAsync();
+            await base.OnConnectedAsync();
         }
 
     }

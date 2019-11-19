@@ -7,10 +7,9 @@ namespace SerjTm.Sample.SudokuArena.Domains
 {
     public partial class User : IUser_Name
     {
-        public readonly string Name;
-        public readonly int WinRate = 0;
+        public string Name { get; private set; }
+        public int WinRate { get; private set; } = 0;
 
-        string IUser_Name.Name => Name;
     }
 
 #pragma warning disable CA1707 // Identifiers should not contain underscores
@@ -21,10 +20,8 @@ namespace SerjTm.Sample.SudokuArena.Domains
 
     public partial class User_Name : IUser_Name
     {
-        public readonly string Name;
+        public string Name { get; private set; }
 
-
-        string IUser_Name.Name => Name;
     }
 #pragma warning restore CA1707 // Identifiers should not contain underscores
 }

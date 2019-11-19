@@ -7,9 +7,9 @@ namespace SerjTm.Sample.SudokuArena.Domains
 {
     public partial class TurnResult
     {
-        public readonly Turn Turn;
-        public readonly bool IsWin = false;
-        public readonly bool IsFail = false;
+        public Turn Turn { get; private set; }
+        public bool IsWin { get; private set; } = false;
+        public bool IsFail { get; private set; } = false;
     }
 
 }

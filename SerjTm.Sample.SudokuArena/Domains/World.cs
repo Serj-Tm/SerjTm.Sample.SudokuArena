@@ -9,8 +9,8 @@ namespace SerjTm.Sample.SudokuArena.Domains
 {
     public partial class World
     {
-        public readonly Game Game = new Game();
-        public readonly ImmutableDictionary<string, User> Users = ImmutableDictionary<string, User>.Empty;
+        public Game Game { get; private set; } = new Game();
+        public ImmutableDictionary<string, User> Users { get; private set; } = ImmutableDictionary<string, User>.Empty;
 
         public IEnumerable<User> Top => Users.Values.OrderByDescending(user => user.WinRate).Take(30).ToArray();
 

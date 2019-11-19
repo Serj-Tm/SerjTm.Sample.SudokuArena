@@ -4,11 +4,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using NitroBolt.Functional;
 using NitroBolt.Immutable;
-using NitroBolt.Functional;
-using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace SerjTm.Sample.SudokuArena.Domains
@@ -28,15 +23,4 @@ namespace SerjTm.Sample.SudokuArena.Domains
         }
     }
 
-    public static partial class GameHelper
-    {
-        public static Game By(this IEnumerable<Game> items, Guid? id = null, ImmutableList<Turn> turns = null)
-        {
-            if (id != null)
-                return items.FirstOrDefault(_item => _item.Id == id);
-            if (turns != null)
-                return items.FirstOrDefault(_item => _item.Turns == turns);
-            return null;
-        }
-    }
 }

@@ -12,9 +12,9 @@ namespace SerjTm.Sample.SudokuArena.Domains
 
     public partial class Game
     {
-        public readonly Guid Id = Guid.NewGuid();
-        public readonly ImmutableArray<int?> Field = EmptyField;
-        public readonly ImmutableList<Turn> Turns = ImmutableList<Turn>.Empty;
+        public Guid Id { get; private set; } = Guid.NewGuid();
+        public ImmutableArray<int?> Field { get; private set; } = EmptyField;
+        public ImmutableList<Turn> Turns { get; private set; } = ImmutableList<Turn>.Empty;
 
         public (Game game, Turn turn) Turn(User user, int cell, int number)
         {

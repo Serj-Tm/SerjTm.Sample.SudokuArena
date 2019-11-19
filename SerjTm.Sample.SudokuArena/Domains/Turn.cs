@@ -7,11 +7,11 @@ namespace SerjTm.Sample.SudokuArena.Domains
 {
     public partial class Turn
     {
-        public readonly int Id;
-        public readonly User User;
-        public readonly int Cell;
-        public readonly int Number;
-        public readonly DateTime Time;
-        public readonly bool IsSkipped = false;
+        public int Id { get; private set; }
+        public User User { get; private set; }
+        public int Cell { get; private set; }
+        public int Number { get; private set; }
+        public DateTime Time { get; private set; }
+        public bool IsSkipped { get; private set; } = false;
     }
 }

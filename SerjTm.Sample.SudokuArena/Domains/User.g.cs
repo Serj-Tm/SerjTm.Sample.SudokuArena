@@ -4,9 +4,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using NitroBolt.Functional;
 using NitroBolt.Immutable;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace SerjTm.Sample.SudokuArena.Domains
@@ -25,17 +22,6 @@ namespace SerjTm.Sample.SudokuArena.Domains
         }
     }
 
-    public static partial class UserHelper
-    {
-        public static User By(this IEnumerable<User> items, string name = null, int ? winRate = null)
-        {
-            if (name != null)
-                return items.FirstOrDefault(_item => _item.Name == name);
-            if (winRate != null)
-                return items.FirstOrDefault(_item => _item.WinRate == winRate);
-            return null;
-        }
-    }
 
     partial class User_Name
     {
@@ -50,13 +36,4 @@ namespace SerjTm.Sample.SudokuArena.Domains
         }
     }
 
-    public static partial class User_NameHelper
-    {
-        public static User_Name By(this IEnumerable<User_Name> items, string name = null)
-        {
-            if (name != null)
-                return items.FirstOrDefault(_item => _item.Name == name);
-            return null;
-        }
-    }
 }
