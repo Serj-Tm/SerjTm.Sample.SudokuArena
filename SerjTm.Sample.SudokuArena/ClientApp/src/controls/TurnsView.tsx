@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Row, Col } from 'reactstrap';
 import { Arena } from '../models/arena';
 import './TurnsView.css';
@@ -15,8 +15,8 @@ export function TurnsView(props: { arena: Arena }) {
               <Col sm='3'>{Math.floor(turn.cell / 9)}:{turn.cell - 9 * Math.floor(turn.cell / 9)}</Col>
               <Col sm='3'>{turn.number + 1}</Col>
             </Row>,
-            turn.isWin ? <Row><Col sm='12' className='win'>Win!</Col></Row> : null,
-            turn.isFail ? <Row><Col sm='12' className='fail'>Fail</Col></Row> : null,
+            turn.isWin ? <Row key={`${k}-win`}><Col sm='12' className='win'>Win!</Col></Row> : null,
+            turn.isFail ? <Row key={`${k}-fail`}><Col sm='12' className='fail'>Fail</Col></Row> : null,
             ]
           )
         }
