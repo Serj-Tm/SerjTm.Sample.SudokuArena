@@ -14,11 +14,10 @@ export class Home extends Component<HomeProps> {
 
   render() {
 
-    console.log(oc(this.props.connection).state());
     return (
       oc(this.props.connection).state() != signalR.HubConnectionState.Connected
-        ? <Button onClick={() => this.props.reconnect}>Подключиться к серверу</Button>
-      : (
+        ? <Button onClick={() => this.props.reconnect()}>Подключиться к серверу</Button>
+      : ( 
         <Row>
           <Col sm='10'>
             {

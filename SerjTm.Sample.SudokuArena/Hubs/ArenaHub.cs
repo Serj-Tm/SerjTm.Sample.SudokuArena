@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using SerjTm.Sample.SudokuArena.Domains;
+using SerjTm.Sample.SudokuArena.Engines;
 using SerjTm.Sample.SudokuArena.Storages;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,13 @@ namespace SerjTm.Sample.SudokuArena.Hubs
             this.ArenaEngine = engine;
         }
         private ArenaEngine ArenaEngine;
+
+        public async Task NewGame()
+        {
+            var (world, game) = ArenaEngine.NewGame();
+            await Clients.All.Game(game);
+        }
+
         public async Task Turn(User_Name user, int cell, int number)
         {
             var (world, result) = ArenaEngine.Turn(user, cell, number);

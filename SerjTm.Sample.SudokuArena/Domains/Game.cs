@@ -7,44 +7,8 @@ using System.Threading.Tasks;
 
 namespace SerjTm.Sample.SudokuArena.Domains
 {
-    public partial class World
-    {
-        public readonly Game Game = new Game();
-        public readonly ImmutableDictionary<string, User> Users = ImmutableDictionary<string, User>.Empty;
+ 
 
-        public IEnumerable<User> Top => Users.Values.OrderByDescending(user => user.WinRate).Take(30).ToArray();
-
-        public (World world, TurnResult result) Turn(IUser_Name user, int cell, int number)
-        {
-            var users = this.Users;
-            var currentUser = users.Find(user.Name);
-            if (currentUser == null)
-            {
-                currentUser = new User(user.Name);
-                users = users.Add(currentUser.Name, currentUser);
-            }
-
-            var world = this.With(users: users);
-            
-            var (game, turn) = this.Game.Turn(currentUser, cell, number);
-            if (turn.IsSkipped)
-                return (world.With(game: game), new TurnResult(turn));
-
-            return (world.With(game: game.IsWin || game.IsFail ? new Game() : game, game.IsWin ? Win(world.Users, turn.User) : world.Users), new TurnResult(turn, isWin: game.IsWin, isFail: game.IsFail));
-        }
-        static ImmutableDictionary<string, User> Win(ImmutableDictionary<string, User> users, User user)
-        {
-            return users.SetItem(user.Name, (users.Find(user.Name) ?? user).With(winRate:user.WinRate + 1));
-        }
-
-    }
-
-    public partial class TurnResult
-    {
-        public readonly Turn Turn;
-        public readonly bool IsWin = false;
-        public readonly bool IsFail = false;
-    }
 
     public partial class Game
     {
@@ -114,37 +78,8 @@ namespace SerjTm.Sample.SudokuArena.Domains
 
         public static readonly ImmutableArray<int?> EmptyField = Enumerable.Range(0, CellCount).Select(_ => (int?)null).ToImmutableArray();
     }
-    public partial class Turn
-    {
-        public readonly int Id;
-        public readonly User User; 
-        public readonly int Cell;
-        public readonly int Number;
-        public readonly DateTime Time;
-        public readonly bool IsSkipped = false;
-    }
-    public partial class User: IUser_Name
-    {
-        public readonly string Name;
-        public readonly int WinRate = 0;
 
-        string IUser_Name.Name => Name;
-    }
-
-#pragma warning disable CA1707 // Identifiers should not contain underscores
-    public interface IUser_Name
-    {
-        string Name { get; }
-    }
-
-    public partial class User_Name: IUser_Name
-    {
-        public readonly string Name;
-
-
-        string IUser_Name.Name => Name;
-    }
-#pragma warning restore CA1707 // Identifiers should not contain underscores
+ 
 
 
 }
