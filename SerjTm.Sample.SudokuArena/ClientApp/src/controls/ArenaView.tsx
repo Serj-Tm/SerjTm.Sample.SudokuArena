@@ -5,8 +5,6 @@ import { Arena } from '../models/arena';
 import './ArenaView.css';
 
 
-const displayNumber = (i: number) => i + 1;
-
 export class ArenaView extends Component<ArenaViewProps> {
   static displayName = ArenaView.name;
 
@@ -75,6 +73,9 @@ export class ArenaView extends Component<ArenaViewProps> {
 function range(n: number) {
   return Array.from(Array(n).keys());
 }
+
+const displayNumber = (i: number) => i + 1;
+
 
 
 export interface ArenaViewProps {

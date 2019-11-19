@@ -5,28 +5,10 @@ import * as signalR from "@aspnet/signalr";
 import { Arena, Turn, Game, User_Name_Rate } from './models/arena';
 import { Home } from './components/Home';
 import { TopView } from './controls/TopView';
+import { connectToSignalR } from './api/arena-signalr';
 
 import './custom.css'
 
-function connectToSignalR(applyArena:(f:(arena:Arena)=>Arena)=>void) {
-
-  const connection = new signalR.HubConnectionBuilder()
-    .withUrl("/hub")
-    .configureLogging(signalR.LogLevel.Debug)
-    .build();
-
-  connection.on("turned", (turn: Turn, isWin:boolean, isFail:boolean) => {
-    applyArena((arena:Arena) => arena.turned(turn, isWin, isFail));
-  });
-  connection.on("game", (game: Game) => {
-    applyArena((arena: Arena) => arena.gamed(game));
-  });
-  connection.on("top", (users: User_Name_Rate[]) => {
-    applyArena((arena: Arena) => arena.with({ users: users }));
-  });
-
-  return connection;
-}
 
 export default class App extends Component<{}, AppState> {
   static displayName = App.name;
