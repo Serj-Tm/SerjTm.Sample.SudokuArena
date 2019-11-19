@@ -1,6 +1,7 @@
 ﻿import React, { Component, useState } from 'react';
 import { Input, Button, Row, Col } from 'reactstrap';
 import { oc } from 'ts-optchain';
+import * as signalR from "@aspnet/signalr";
 import { User_Name, Arena } from '../models/arena';
 import { ArenaView, ArenaViewProps } from '../controls/ArenaView';
 import { TurnsView } from '../controls/TurnsView';
@@ -11,27 +12,33 @@ export class Home extends Component<HomeProps> {
 
 
 
-  render () {
+  render() {
+
+    console.log(oc(this.props.connection).state());
     return (
-      <Row>
-        <Col sm='10'>
-          {
-            this.props.arena.user == null
-              ? <SignUp setUser={this.props.setUser} />
-              : (
-                <div>
-                  <h3>{this.props.arena.user.name}</h3>
-                  <ArenaView connection={this.props.connection} arena={this.props.arena} />
-                  <Button disabled={this.props.arena.cells.length != 0} onClick={this.sendWin}>Auto win</Button>{' '}
-                  <Button disabled={this.props.arena.cells.length != 0} onClick={this.sendFail}>Auto fail</Button>{' '}
-                </div>
-                )
-          }
-        </Col>
-        <Col sm='2'>
-          <TurnsView arena={this.props.arena} />
-        </Col>
-      </Row>
+      oc(this.props.connection).state() != signalR.HubConnectionState.Connected
+        ? <Button onClick={() => this.props.reconnect}>Подключиться к серверу</Button>
+      : (
+        <Row>
+          <Col sm='10'>
+            {
+              this.props.arena.user == null
+                ? <SignUp setUser={this.props.setUser} />
+                : (
+                  <div>
+                    <h3>{this.props.arena.user.name}</h3>
+                    <ArenaView connection={this.props.connection} arena={this.props.arena} />
+                    <Button disabled={this.props.arena.cells.length != 0} onClick={this.sendWin}>Auto win</Button>{' '}
+                    <Button disabled={this.props.arena.cells.length != 0} onClick={this.sendFail}>Auto fail</Button>{' '}
+                  </div>
+                  )
+            }
+          </Col>
+          <Col sm='2'>
+            <TurnsView arena={this.props.arena} />
+          </Col>
+        </Row>
+        )
     );
   }
 
@@ -94,4 +101,5 @@ interface SignUpProps {
 
 
 interface HomeProps extends SignUpProps, ArenaViewProps {
+  reconnect: () => void;
 }

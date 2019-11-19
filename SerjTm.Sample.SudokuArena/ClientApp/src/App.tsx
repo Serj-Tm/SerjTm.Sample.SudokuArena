@@ -15,7 +15,6 @@ function connectToSignalR(applyArena:(f:(arena:Arena)=>Arena)=>void) {
     .configureLogging(signalR.LogLevel.Debug)
     .build();
 
-
   connection.on("turned", (turn: Turn, isWin:boolean, isFail:boolean) => {
     applyArena((arena:Arena) => arena.turned(turn, isWin, isFail));
   });
@@ -39,26 +38,34 @@ export default class App extends Component<{}, AppState> {
   }
 
   componentDidMount() {
-    const connection = connectToSignalR(this.applyArena);
-    connection.start();
-    this.setState({ connection: connection });
+    this.reconnect();
   }
 
   componentWillUnmount() {
-    if (this.state.connection != null) {
-      this.state.connection.stop();
-    }
-
+    this.stopConnection();
   }
 
   applyArena = (f: (arena: Arena) => Arena) =>{
     this.setState(prevState => ({ ...prevState, arena: f(prevState.arena) }));
   }
 
+  reconnect = () => {
+    this.stopConnection();
+
+    const connection = connectToSignalR(this.applyArena);
+    connection.start();
+    this.setState({ connection: connection });
+  }
+  stopConnection = () => {
+    if (this.state.connection != null) {
+      this.state.connection.stop();
+    }
+  }
+
   render () {
     return (
       <Layout>
-        <Route exact path='/' render={(props) => <Home connection={this.state.connection} arena={this.state.arena} setUser={user => this.applyArena(arena => arena.with({ user: user }))} />} />
+        <Route exact path='/' render={(props) => <Home connection={this.state.connection} arena={this.state.arena} setUser={user => this.applyArena(arena => arena.with({ user: user }))} reconnect={this.reconnect} />} />
         <Route path='/top' render={(props) => <TopView users={this.state.arena.users} />} />
       </Layout>
     );
